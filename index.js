@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const router1 = require('./list-view-router');
-const router2 = require('./list-edit-router');
+const editRouter = require('./list-edit-router')
+const viewRouter = require('./list-view-router')
 
 app.use( "/list", router1);
 app.use( "/list", router2);

@@ -6,14 +6,16 @@ const cuerpoVacio = (req, res, next) => {
   if (req.method === 'POST') {
     if (Object.keys(req.body).length === 0) {
       return res.status(400).json({ error: 'Solicitudes POST con el cuerpo vacio.' });
-    }
-  }else if (req.method === 'PUT') {
+    } else{const { id, isCompleted, description } = req.body;
+    if (!id || !isCompleted || !description) {
+      return res.status(400).json({ error: 'Información no valida o Faltan atributos obligatorios en la solicitud de la tarea.' });}
+  } if (req.method === 'PUT') {
     if (!req.body || Object.keys(req.body).length === 0) {
       return res.status(400).json({ error: 'Cuerpo de la solicitud PUT vacío' });
     }
   } 
   next();
-};
+}};
 
 const solicitudNoValida = (req, res, next) => {
 
@@ -35,7 +37,6 @@ const solicitudNoValida = (req, res, next) => {
 
 Router.use(express.json()); 
 Router.use(cuerpoVacio);
-Router.use(solicitudNoValida);
 
 
 Router.post('', (req, res) => {

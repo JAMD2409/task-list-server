@@ -1,64 +1,64 @@
 const {Router} = require("express")
 const router = Router();
+const taks = []
 
-const cuerpoVacio = (req, res, next) => {
 
+router.post("/crear-tarea",(req, res, next) => {
   if (req.method === 'POST') {
+    // Verificar solicitudes POST
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: 'Solicitudes POST con el cuerpo vacio.' });
-    } else{const { id, isCompleted, description } = req.body;
-    if (!id || !isCompleted || !description) {
-      return res.status(400).json({ error: 'Información no valida o Faltan atributos obligatorios en la solicitud de la tarea.' });}
-  } if (req.method === 'PUT') {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: 'Cuerpo de la solicitud PUT vacío' });
-    }
-  } 
-  next();
-}};
-
-const solicitudNoValida = (req, res, next) => {
-
-  if (req.method === 'POST') {
-    const { id, isCompleted, description } = req.body;
-    if (!id || !isCompleted || !description) {
-      return res.status(400).json({ error: 'Información no valida o Faltan atributos obligatorios en la solicitud de la tarea.' });
-    } else if (req.method === 'PUT') {
-      const { id, isCompleted, description } = req.body;
-      if (!id || !isCompleted || !description) {
-        return res.status(400).json({ error: 'Información no valida o Faltan atributos obligatorios en la solicitud de la tarea.' });
+      return res.status(400).json({ error: 'El cuerpo de la solicitud POST está vacío.' });
+    } else {
+      const { description } = req.body;
+      if (!description) {
+        return res.status(400).json({ error: 'Faltan atributos para crear la tarea.' });
       }
-    next();
-  } else {
-
-    next();
+    }
+  } else if (req.method === 'PUT') {
+    // Verificar solicitudes PUT
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({ error: 'El cuerpo de la solicitud PUT está vacío.' });
+    } else {
+      const { id, description, completed } = req.body;
+      if (!id || !description || completed === undefined) {
+        return res.status(400).json({ error: 'Información no válida o atributos faltantes para actualizar la tarea.' });
+      }
+    }
   }
-}};
 
-Router.use(express.json()); 
-Router.use(cuerpoVacio);
-
-
-Router.post('', (req, res) => {
-  res.json({ mensaje: 'Solicitudes POST con el cuerpo vacio.' });
+  // Continuar con la siguiente middleware/route handler si no hay errores
+  next();
 });
 
+// Rutas y controladores para tu router list-edit-router
 router.post('/crear-tarea', (req, res) => {
-    res.send("Tarea añadida")
-})
+  const {description, completed} = req.body
+  const newTaks = {
+    id : Date.now(),
+    completed,
+    description,
+  }
 
-router.put('/crear-tarea', (req, res) => {
+  console.log(newTaks)
+  taks.push(newTaks)
+  res.status(201)
   res.send("Tarea añadida")
 })
 
 router.delete('/eliminar-tarea/:idTarea', (req, res) => {
-    const id = req.params.idTarea
-    res.send("La tarea eliminada es : " + Id)
+  const id = req.params.idTarea
+  res.send("La tarea eliminada es : " + id)
 })
 
 router.put('/actualizar-tarea/:idTarea', (req, res) => {
-    const id = req.params.idTarea
-    res.send("Tarea actualizada")
+  const id = req.params.idTarea
+  res.send("La tarea actualizada es : " + id)
 })
 
+// Middleware para manejar errores
+
+  
+
+
 module.exports = router;
+module.exports = taks;
